@@ -967,6 +967,7 @@ body {
       </div>
     </div>
     <div class="modal-footer">
+      <button class="btn-primary" onclick="editExercise()">✏️ Modifier</button>
       <button class="btn-secondary" onclick="printExercise()">🖨️ Imprimer</button>
       <button class="btn-secondary" onclick="showQR()">📱 QR Code</button>
       <button class="btn-secondary" onclick="deleteExercise()">🗑️ Supprimer</button>
@@ -998,7 +999,7 @@ body {
 <div class="modal-overlay" id="addModal">
   <div class="modal" style="max-width: 640px;">
     <div class="modal-header">
-      <h2 class="modal-title">Nouvel exercice</h2>
+      <h2 class="modal-title" id="addModalTitle">Nouvel exercice</h2>
       <button class="modal-close" onclick="closeModal('addModal')">✕</button>
     </div>
     <div class="modal-body">
@@ -1057,7 +1058,7 @@ body {
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal('addModal')">Annuler</button>
-      <button class="btn-primary" onclick="saveExercise()">✓ Enregistrer</button>
+      <button class="btn-primary" id="formSaveBtn" onclick="saveExercise()">✓ Enregistrer</button>
     </div>
   </div>
 </div>
@@ -1308,8 +1309,9 @@ const DEFAULT_EXERCISES = [
 
 // ═══ STATE ═══
 let exercises = [];
-let activeFilters = { functions: [], type: null };
+let activeFilters = { functions: [], types: [] };
 let currentExerciseId = null;
+let editingId = null;
 
 // ═══ STORAGE ═══
 function loadExercises() {
@@ -1359,9 +1361,12 @@ function toggleFunctionFilter(func) {
 }
 
 function toggleTypeFilter(type) {
-  activeFilters.type = activeFilters.type === type ? null : type;
+  const idx = activeFilters.types.indexOf(type);
+  if (idx > -1) activeFilters.types.splice(idx, 1);
+  else activeFilters.types.push(type);
+  
   document.querySelectorAll('[data-type]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.type === activeFilters.type);
+    btn.classList.toggle('active', activeFilters.types.includes(btn.dataset.type));
   });
   filterExercises();
 }
@@ -1424,7 +1429,7 @@ function filterExercises() {
     const matchFunction = activeFilters.functions.length === 0 ||
       activeFilters.functions.some(f => ex.functions.includes(f));
 
-    const matchType = !activeFilters.type || ex.type === activeFilters.type;
+    const matchType = activeFilters.types.length === 0 || activeFilters.types.includes(ex.type);
 
     return matchSearch && matchFunction && matchType;
   });
@@ -1532,29 +1537,42 @@ function printQR() {
     <script>setTimeout(()=>window.print(),300)<\/script></body></html>`);
 }
 
-// ═══ ADD EXERCISE ═══
-function openAddModal() {
-  document.getElementById('formName').value = '';
-  document.getElementById('formEmoji').value = '';
-  document.getElementById('formShortDesc').value = '';
-  document.getElementById('formDesc').value = '';
-  document.getElementById('formDuration').value = '';
-  document.getElementById('formAge').value = '';
-  document.getElementById('formMaterial').value = '';
-  document.getElementById('formSteps').value = '';
-  document.getElementById('formVariants').value = '';
+// ═══ ADD / EDIT EXERCISE ═══
+function openAddModal(prefill = null) {
+  editingId = prefill ? prefill.id : null;
+  
+  document.getElementById('addModalTitle').textContent = prefill ? 'Modifier l\'exercice' : 'Nouvel exercice';
+  document.getElementById('formSaveBtn').textContent = prefill ? '✓ Enregistrer les modifications' : '✓ Enregistrer';
+
+  document.getElementById('formName').value = prefill ? prefill.name : '';
+  document.getElementById('formEmoji').value = prefill ? prefill.emoji : '';
+  document.getElementById('formShortDesc').value = prefill ? prefill.shortDesc : '';
+  document.getElementById('formDesc').value = prefill ? prefill.description : '';
+  document.getElementById('formDuration').value = prefill ? prefill.duration : '';
+  document.getElementById('formAge').value = prefill ? prefill.age : '';
+  document.getElementById('formMaterial').value = prefill ? prefill.material : '';
+  document.getElementById('formSteps').value = prefill ? prefill.steps.join('\n') : '';
+  document.getElementById('formVariants').value = prefill && prefill.variants ? prefill.variants.join('\n') : '';
 
   const typeSelect = document.getElementById('formType');
   typeSelect.innerHTML = '<option value="">— Choisir —</option>' +
-    TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
+    TYPES.map(t => `<option value="${t}" ${prefill && prefill.type === t ? 'selected' : ''}>${t}</option>`).join('');
 
   const funcContainer = document.getElementById('formFunctions');
-  funcContainer.innerHTML = FUNCTIONS.map(f =>
-    `<div class="checkbox-chip" data-func="${f}" onclick="this.classList.toggle('selected')">${f}</div>`
-  ).join('');
+  funcContainer.innerHTML = FUNCTIONS.map(f => {
+    const isSelected = prefill && prefill.functions.includes(f);
+    return `<div class="checkbox-chip ${isSelected ? 'selected' : ''}" data-func="${f}" onclick="this.classList.toggle('selected')">${f}</div>`;
+  }).join('');
 
   document.getElementById('addModal').classList.add('active');
   document.body.style.overflow = 'hidden';
+}
+
+function editExercise() {
+  const ex = exercises.find(e => e.id === currentExerciseId);
+  if (!ex) return;
+  closeModal('detailModal');
+  setTimeout(() => openAddModal(ex), 200);
 }
 
 function saveExercise() {
@@ -1573,8 +1591,8 @@ function saveExercise() {
   const variantsText = document.getElementById('formVariants').value.trim();
   const variants = variantsText ? variantsText.split('\n').filter(v => v.trim()) : [];
 
-  const newExercise = {
-    id: 'ex_' + Date.now(),
+  const exerciseData = {
+    id: editingId || 'ex_' + Date.now(),
     name,
     emoji: document.getElementById('formEmoji').value.trim() || '🎯',
     shortDesc: document.getElementById('formShortDesc').value.trim() || name,
@@ -1588,12 +1606,20 @@ function saveExercise() {
     variants
   };
 
-  exercises.unshift(newExercise);
+  if (editingId) {
+    const idx = exercises.findIndex(e => e.id === editingId);
+    if (idx > -1) exercises[idx] = exerciseData;
+    showToast('✓ Exercice modifié avec succès !');
+  } else {
+    exercises.unshift(exerciseData);
+    showToast('✓ Exercice ajouté avec succès !');
+  }
+
+  editingId = null;
   saveToStorage();
   renderExercises();
   updateStats();
   closeModal('addModal');
-  showToast('✓ Exercice ajouté avec succès !');
 }
 
 function deleteExercise() {
