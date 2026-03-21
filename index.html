@@ -304,118 +304,223 @@ header {
 .shint b { color: var(--ink2); }
 
 /* ════════════════════════════════════════════════════════════════
-   LIENS EXTERNES — liste simple
+   LIENS EXTERNES — grille de tuiles + formulaire rapide
 ════════════════════════════════════════════════════════════════ */
 
-/* Add form */
-.add-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.6rem 2rem; box-shadow: var(--shadow); }
-.add-card h3 { font-family: var(--fd); font-size: 1.3rem; font-weight: 300; margin-bottom: 1rem; }
-.add-card h3 em { font-style: italic; color: var(--accent); }
-
-.add-row { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: .6rem; align-items: end; }
-
-/* emoji picker */
-.epick-wrap { display: flex; flex-direction: column; gap: .28rem; }
-.epick-wrap label { font-size: .61rem; text-transform: uppercase; letter-spacing: .1em; color: var(--ink3); font-weight: 500; }
-.epick {
-  display: flex; gap: .25rem; flex-wrap: wrap;
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: var(--rsm); padding: .35rem .4rem;
+/* ── Zone d'ajout rapide ── */
+.add-zone {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
 }
-.ep {
+
+/* Barre URL principale — coller & valider */
+.paste-bar {
+  display: flex; align-items: center; gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+.paste-icon {
+  padding: 0 1rem; font-size: 1rem; color: var(--ink3);
+  flex-shrink: 0; pointer-events: none; line-height: 1;
+}
+.paste-url {
+  flex: 1; border: none; outline: none;
+  background: transparent; color: var(--ink);
+  font-size: .9rem; font-family: var(--fb);
+  padding: .95rem .5rem .95rem 0;
+}
+.paste-url::placeholder { color: var(--ink3); }
+.paste-url:focus { background: #fafaf8; }
+
+/* Champs secondaires (révèlés après paste) */
+.add-details {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 0; align-items: stretch;
+  max-height: 0; overflow: hidden;
+  transition: max-height .28s ease, opacity .22s ease;
+  opacity: 0;
+}
+.add-details.open { max-height: 180px; opacity: 1; }
+
+.detail-left {
+  display: grid; grid-template-columns: auto 1fr;
+  gap: 0; border-top: none;
+}
+
+/* Emoji picker compact — colonne gauche */
+.emoji-col {
+  display: flex; flex-direction: column;
+  border-right: 1px solid var(--border);
+  padding: .6rem .5rem;
+  gap: .3rem; align-items: center;
+  background: var(--bg);
+}
+.emoji-col-lbl {
+  font-size: .55rem; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--ink3); font-weight: 500;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  margin-bottom: .2rem;
+}
+.epick2 { display: flex; flex-direction: column; gap: .18rem; align-items: center; }
+.ep2 {
   background: none; border: 1.5px solid transparent;
-  border-radius: 6px; padding: .12rem .22rem;
-  font-size: 1.1rem; cursor: pointer; transition: all .13s; line-height: 1;
+  border-radius: 5px; padding: .08rem .12rem;
+  font-size: 1.05rem; cursor: pointer;
+  transition: all .12s; line-height: 1;
 }
-.ep:hover { border-color: var(--border); }
-.ep.sel { border-color: var(--accent); background: var(--accent-l); }
+.ep2:hover { border-color: var(--border); background: var(--bg); }
+.ep2.sel { border-color: var(--accent); background: var(--accent-l); }
 
-.finp { display: flex; flex-direction: column; gap: .28rem; }
-.finp label { font-size: .61rem; text-transform: uppercase; letter-spacing: .1em; color: var(--ink3); font-weight: 500; }
-.finp input {
-  border: 1px solid var(--border); border-radius: var(--rsm);
-  background: var(--bg); color: var(--ink); font-size: .83rem;
-  padding: .46rem .7rem; outline: none; width: 100%;
-  transition: border-color .18s;
+/* Ligne nom + description */
+.name-col {
+  display: flex; flex-direction: column;
+  border-bottom: 1px solid var(--border);
 }
-.finp input:focus { border-color: var(--accent); }
+.detail-name {
+  border: none; outline: none;
+  background: transparent; font-family: var(--fb);
+  font-size: .88rem; font-weight: 500; color: var(--ink);
+  padding: .75rem 1rem .4rem;
+}
+.detail-name::placeholder { color: var(--ink3); font-weight: 400; }
+.detail-url-preview {
+  font-size: .7rem; color: var(--ink3);
+  padding: 0 1rem .75rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 
-.btn-add {
+/* Bouton Ajouter — colonne droite */
+.btn-confirm {
   background: var(--accent); color: #fff;
-  border: none; border-radius: var(--rsm);
-  font-size: .83rem; font-weight: 500;
-  padding: .5rem 1.2rem; cursor: pointer;
-  transition: all .16s; white-space: nowrap; align-self: end;
+  border: none; border-left: 1px solid rgba(0,0,0,.08);
+  font-family: var(--fb); font-size: .82rem; font-weight: 500;
+  padding: 0 1.5rem; cursor: pointer;
+  transition: background .16s; white-space: nowrap;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: .2rem;
+  min-width: 88px;
 }
-.btn-add:hover { background: #2f5749; }
+.btn-confirm:hover { background: #2f5749; }
+.btn-confirm .bc-icon { font-size: 1.2rem; }
+.btn-confirm .bc-lbl { font-size: .68rem; letter-spacing: .04em; }
 
-/* search */
-.links-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  margin: 1.5rem 0 .9rem;
-  flex-wrap: wrap; gap: .6rem;
+/* ── Barre outils + recherche ── */
+.tools-bar {
+  display: flex; align-items: center; gap: .75rem;
+  margin: 1.5rem 0 1rem; flex-wrap: wrap;
 }
-.links-count { font-size: .72rem; color: var(--ink3); }
-.links-count b { color: var(--ink2); }
+.tools-count { font-size: .72rem; color: var(--ink3); flex: 1; }
+.tools-count b { color: var(--ink2); font-weight: 500; }
+
+.view-toggle { display: flex; gap: 2px; }
+.vt-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: var(--rsm); color: var(--ink3);
+  font-size: .75rem; padding: .28rem .55rem;
+  cursor: pointer; transition: all .14s;
+}
+.vt-btn.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+
 .lsearch {
   border: 1px solid var(--border); border-radius: 100px;
   background: var(--surface); color: var(--ink);
-  font-size: .75rem; padding: .3rem 1rem; outline: none;
-  width: 210px; transition: border-color .18s;
+  font-size: .75rem; padding: .3rem 1rem;
+  outline: none; width: 200px; transition: border-color .18s;
 }
 .lsearch:focus { border-color: var(--accent); }
 
-/* list */
-.links-list { display: flex; flex-direction: column; gap: .5rem; }
+/* ── Grille de tuiles ── */
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: .75rem;
+}
+
+.ltile {
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.25rem 1rem 1rem;
+  text-decoration: none; color: inherit;
+  display: flex; flex-direction: column; gap: .5rem;
+  position: relative; overflow: hidden;
+  transition: all .18s;
+  cursor: pointer;
+}
+.ltile::after {
+  content: ''; position: absolute; inset: 0;
+  border-radius: var(--radius);
+  box-shadow: 0 6px 24px rgba(58,107,92,.14);
+  opacity: 0; transition: opacity .18s;
+}
+.ltile:hover { border-color: var(--accent); transform: translateY(-3px); }
+.ltile:hover::after { opacity: 1; }
+
+.ltile-ico {
+  font-size: 1.75rem; line-height: 1;
+  margin-bottom: .1rem;
+}
+.ltile-name {
+  font-size: .84rem; font-weight: 500; color: var(--ink);
+  line-height: 1.3; word-break: break-word;
+}
+.ltile-domain {
+  font-size: .67rem; color: var(--ink3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-top: auto;
+}
+.ltile-del {
+  position: absolute; top: .5rem; right: .5rem;
+  background: none; border: none; color: var(--ink3);
+  font-size: .7rem; padding: .2rem .3rem; border-radius: 5px;
+  cursor: pointer; opacity: 0; transition: all .14s;
+}
+.ltile:hover .ltile-del { opacity: 1; }
+.ltile-del:hover { background: var(--red-l); color: var(--red); }
+
+/* drag reorder on tiles */
+.ltile.dragging  { opacity: .35; border-style: dashed; }
+.ltile.drag-over { border-color: var(--accent); background: var(--accent-l); }
+
+/* ── Vue liste (alternative) ── */
+.links-list { display: flex; flex-direction: column; gap: .45rem; }
 
 .litem {
-  display: flex; align-items: center; gap: 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border); border-radius: var(--rsm);
-  padding: .7rem 1rem;
+  display: flex; align-items: center; gap: .9rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--rsm); padding: .65rem .95rem;
   text-decoration: none; color: inherit;
-  transition: all .16s; position: relative;
-  overflow: hidden;
+  transition: all .16s; position: relative; overflow: hidden;
 }
 .litem::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
   background: var(--accent); opacity: 0; transition: opacity .18s;
 }
-.litem:hover { border-color: var(--accent); transform: translateX(2px); box-shadow: 0 2px 12px rgba(58,107,92,.1); }
+.litem:hover { border-color: var(--accent); transform: translateX(2px); box-shadow: 0 2px 10px rgba(58,107,92,.1); }
 .litem:hover::before { opacity: 1; }
-
-.litem-icon { font-size: 1.25rem; flex-shrink: 0; width: 28px; text-align: center; }
+.litem-icon { font-size: 1.15rem; flex-shrink: 0; width: 26px; text-align: center; }
 .litem-body { flex: 1; min-width: 0; }
-.litem-name { font-size: .87rem; font-weight: 500; color: var(--ink); line-height: 1.3; }
-.litem-url {
-  font-size: .7rem; color: var(--ink3);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  max-width: 100%;
-}
+.litem-name { font-size: .86rem; font-weight: 500; line-height: 1.3; }
+.litem-url  { font-size: .69rem; color: var(--ink3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .litem-del {
   background: none; border: none; color: var(--ink3);
-  font-size: .75rem; cursor: pointer; padding: .25rem .4rem;
-  border-radius: 5px; opacity: 0; transition: all .15s; flex-shrink: 0;
+  font-size: .72rem; cursor: pointer; padding: .22rem .38rem;
+  border-radius: 5px; opacity: 0; transition: all .14s; flex-shrink: 0;
 }
 .litem:hover .litem-del { opacity: 1; }
 .litem-del:hover { background: var(--red-l); color: var(--red); }
-
-/* drag handle */
-.litem-drag {
-  color: var(--ink3); font-size: .85rem; cursor: grab;
-  opacity: 0; flex-shrink: 0; padding: 0 .2rem;
-  transition: opacity .15s;
-}
+.litem-drag { color: var(--ink3); font-size: .8rem; cursor: grab; opacity: 0; flex-shrink: 0; transition: opacity .14s; }
 .litem:hover .litem-drag { opacity: 1; }
-.litem.dragging { opacity: .4; background: var(--accent-l); }
+.litem.dragging  { opacity: .35; }
 .litem.drag-over { border-color: var(--accent); }
 
-/* empty */
+/* ── État vide ── */
 .empty {
   text-align: center; padding: 3rem 1rem;
-  color: var(--ink3); font-size: .82rem;
+  color: var(--ink3); font-size: .82rem; line-height: 1.7;
 }
-.empty .ei { font-size: 2rem; margin-bottom: .6rem; }
+.empty .ei { font-size: 2.2rem; margin-bottom: .7rem; }
 
 /* ── TOAST ───────────────────────────────────────────────────── */
 .toast {
@@ -451,9 +556,8 @@ footer {
   .timer-wrap { grid-template-columns: 1fr; }
   .dial-zone { margin: 0 auto; }
   .pat-row { grid-template-columns: 1fr; }
-  .add-row { grid-template-columns: 1fr 1fr; }
-  .add-row .btn-add { grid-column: span 2; }
-  .epick-wrap { grid-column: span 2; }
+  .paste-url { font-size: .82rem; }
+  .btn-confirm { min-width: 70px; padding: 0 1rem; }
   header { padding: 0 1rem; }
   .wrap { padding: 2rem 1rem; }
   .card { padding: 1.4rem 1.1rem; }
@@ -658,38 +762,52 @@ footer {
   <section>
     <div class="section-lbl">03 — Mes outils &amp; ressources</div>
 
-    <!-- Add form -->
-    <div class="add-card">
-      <h3>Ajouter un <em>outil</em></h3>
-      <div class="add-row">
-        <!-- emoji -->
-        <div class="epick-wrap">
-          <label>Icône</label>
-          <div class="epick" id="epick"></div>
-        </div>
-        <!-- name -->
-        <div class="finp">
-          <label>Nom de l'outil</label>
-          <input type="text" id="lname" placeholder="ex : Bilan VMI">
-        </div>
-        <!-- url -->
-        <div class="finp">
-          <label>URL</label>
-          <input type="url" id="lurl" placeholder="https://…">
-        </div>
-        <!-- submit -->
-        <button class="btn-add" onclick="addLink()">+ Ajouter</button>
+    <!-- Zone d'ajout rapide -->
+    <div class="add-zone">
+
+      <!-- Barre de collage URL -->
+      <div class="paste-bar">
+        <span class="paste-icon">🔗</span>
+        <input class="paste-url" type="url" id="lurl"
+          placeholder="Collez ou tapez une URL… puis Entrée"
+          autocomplete="off" spellcheck="false">
       </div>
+
+      <!-- Détails révélés après collage -->
+      <div class="add-details" id="addDetails">
+        <div class="detail-left">
+          <!-- Sélecteur emoji vertical -->
+          <div class="emoji-col">
+            <span class="emoji-col-lbl">Icône</span>
+            <div class="epick2" id="epick2"></div>
+          </div>
+          <!-- Nom éditable + aperçu URL -->
+          <div class="name-col">
+            <input class="detail-name" type="text" id="lname" placeholder="Nom de l'outil…">
+            <div class="detail-url-preview" id="urlPreview"></div>
+          </div>
+        </div>
+        <!-- Bouton Confirmer -->
+        <button class="btn-confirm" onclick="addLink()">
+          <span class="bc-icon">＋</span>
+          <span class="bc-lbl">Ajouter</span>
+        </button>
+      </div>
+
+    </div><!-- /add-zone -->
+
+    <!-- Barre outils -->
+    <div class="tools-bar">
+      <div class="tools-count" id="linksCountLbl"></div>
+      <div class="view-toggle">
+        <button class="vt-btn on" id="vtGrid" onclick="setView('grid',this)" title="Grille">⊞</button>
+        <button class="vt-btn"    id="vtList" onclick="setView('list',this)" title="Liste">☰</button>
+      </div>
+      <input class="lsearch" type="text" id="lsearch" placeholder="Rechercher…" oninput="renderLinks()">
     </div>
 
-    <!-- list header -->
-    <div class="links-bar">
-      <div class="links-count" id="linksCountLbl"></div>
-      <input class="lsearch" type="text" id="lsearch" placeholder="Rechercher un outil…" oninput="renderLinks()">
-    </div>
-
-    <!-- list -->
-    <div class="links-list" id="linksList"></div>
+    <!-- Contenu dynamique -->
+    <div id="linksContainer"></div>
 
   </section>
 </div>
@@ -873,126 +991,216 @@ function clearSmart() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   LIENS EXTERNES — localStorage, liste simple, drag-to-reorder
+   LIENS EXTERNES
+   • Coller URL → révèle détails → Entrée ou clic Ajouter
+   • Grille de tuiles (défaut) ou liste compacte
+   • Drag-to-reorder dans les deux modes
+   • localStorage persistant
 ══════════════════════════════════════════════════════════════ */
-const LS_KEY = 'psychokit_links_v2';
-const EMOJIS = ['🔗','📄','🎯','🎮','📊','🧩','🎨','🏃','📚','🔬','🧠','💡','📝','🎵','🌟','⚙️','🖥️','📋'];
-let selEmoji = '🔗';
-let dragSrc = null;
+const LS_KEY   = 'psychokit_links_v3';
+const LS_VIEW  = 'psychokit_view';
+const EMOJIS   = ['🔗','📄','🎯','🎮','📊','🧩','🎨','🏃','📚','🔬','🧠','💡','📝','🎵','🌟','⚙️','🖥️','📋'];
 
+let selEmoji   = '🔗';
+let viewMode   = localStorage.getItem(LS_VIEW) || 'grid';
+let dragSrc    = null;
+
+/* Storage helpers */
 function loadLinks()  { try { return JSON.parse(localStorage.getItem(LS_KEY)||'[]'); } catch(e){ return []; } }
 function saveLinks(a) { localStorage.setItem(LS_KEY, JSON.stringify(a)); }
 
-/* Build emoji picker */
-(function buildEpick() {
-  const wrap = document.getElementById('epick');
+/* ── Build vertical emoji picker ── */
+(function buildEpick2() {
+  const wrap = document.getElementById('epick2');
   EMOJIS.forEach(e => {
     const btn = document.createElement('button');
-    btn.className = 'ep' + (e === selEmoji ? ' sel' : '');
-    btn.textContent = e;
-    btn.title = e;
+    btn.className = 'ep2' + (e === selEmoji ? ' sel' : '');
+    btn.textContent = e; btn.title = e;
     btn.onclick = () => {
       selEmoji = e;
-      wrap.querySelectorAll('.ep').forEach(b => b.classList.remove('sel'));
+      wrap.querySelectorAll('.ep2').forEach(b => b.classList.remove('sel'));
       btn.classList.add('sel');
     };
     wrap.appendChild(btn);
   });
 })();
 
+/* ── URL field: reveal details on input ── */
+const lurlEl     = document.getElementById('lurl');
+const lnameEl    = document.getElementById('lname');
+const detailsEl  = document.getElementById('addDetails');
+const previewEl  = document.getElementById('urlPreview');
+
+function extractDomain(url) {
+  try { return new URL(url).hostname.replace(/^www\./,''); } catch(e){ return url; }
+}
+function guessName(url) {
+  const dom = extractDomain(url);
+  return dom.split('.')[0].replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+}
+
+lurlEl.addEventListener('input', () => {
+  const v = lurlEl.value.trim();
+  const open = v.length > 5;
+  detailsEl.classList.toggle('open', open);
+  if (open) {
+    previewEl.textContent = extractDomain(v);
+    if (!lnameEl.value) lnameEl.value = guessName(v);
+  }
+});
+
+lurlEl.addEventListener('paste', e => {
+  // slight delay so value is updated
+  setTimeout(() => {
+    lurlEl.dispatchEvent(new Event('input'));
+    lnameEl.focus(); lnameEl.select();
+  }, 30);
+});
+
+lurlEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { if (detailsEl.classList.contains('open')) addLink(); }
+});
+lnameEl.addEventListener('keydown', e => { if (e.key === 'Enter') addLink(); });
+
+/* ── Add link ── */
 function addLink() {
-  const name = document.getElementById('lname').value.trim();
-  let   url  = document.getElementById('lurl').value.trim();
-  if (!name) { toast('⚠ Entrez un nom'); return; }
-  if (!url)  { toast('⚠ Entrez une URL'); return; }
+  const name = lnameEl.value.trim();
+  let   url  = lurlEl.value.trim();
+  if (!url)  { toast('⚠ Collez d\'abord une URL'); lurlEl.focus(); return; }
+  if (!name) { toast('⚠ Donnez un nom à l\'outil'); lnameEl.focus(); return; }
   if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
 
   const links = loadLinks();
   links.push({ id: Date.now(), name, url, emoji: selEmoji });
   saveLinks(links);
 
-  document.getElementById('lname').value = '';
-  document.getElementById('lurl').value  = '';
+  /* reset form */
+  lurlEl.value = ''; lnameEl.value = '';
+  previewEl.textContent = '';
+  detailsEl.classList.remove('open');
+  lurlEl.focus();
+
   renderLinks();
   toast(`✓ « ${name} » ajouté`);
 }
 
+/* ── Delete ── */
 function deleteLink(id) {
   saveLinks(loadLinks().filter(l => l.id !== id));
   renderLinks();
   toast('Lien supprimé');
 }
 
-function renderLinks() {
-  const links = loadLinks();
-  const q = (document.getElementById('lsearch')?.value||'').toLowerCase().trim();
-  const filtered = q ? links.filter(l => l.name.toLowerCase().includes(q) || l.url.toLowerCase().includes(q)) : links;
+/* ── View toggle ── */
+function setView(mode, btn) {
+  viewMode = mode;
+  localStorage.setItem(LS_VIEW, mode);
+  document.querySelectorAll('.vt-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderLinks();
+}
 
-  /* count badge */
+/* ── Drag helpers (shared) ── */
+function attachDrag(el, linkId, links) {
+  el.draggable = true;
+  el.addEventListener('dragstart', e => {
+    dragSrc = linkId;
+    setTimeout(() => el.classList.add('dragging'), 0);
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  el.addEventListener('dragend',  () => { el.classList.remove('dragging'); dragSrc = null; });
+  el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('drag-over'); });
+  el.addEventListener('dragleave',() => el.classList.remove('drag-over'));
+  el.addEventListener('drop', e => {
+    e.preventDefault(); el.classList.remove('drag-over');
+    if (dragSrc === null || dragSrc === linkId) return;
+    const all = loadLinks();
+    const fi = all.findIndex(l => l.id === dragSrc);
+    const ti = all.findIndex(l => l.id === linkId);
+    if (fi < 0 || ti < 0) return;
+    const [mv] = all.splice(fi, 1); all.splice(ti, 0, mv);
+    saveLinks(all); renderLinks();
+  });
+}
+
+/* ── Render ── */
+function renderLinks() {
+  const links   = loadLinks();
+  const q       = (document.getElementById('lsearch')?.value||'').toLowerCase().trim();
+  const filtered = q
+    ? links.filter(l => l.name.toLowerCase().includes(q) || l.url.toLowerCase().includes(q))
+    : links;
+
+  /* count label */
   const lbl = document.getElementById('linksCountLbl');
   lbl.innerHTML = filtered.length
-    ? `<b>${filtered.length}</b> outil${filtered.length > 1 ? 's' : ''}${q ? ' trouvé'+( filtered.length>1?'s':'') : ''}`
+    ? `<b>${filtered.length}</b> outil${filtered.length>1?'s':''}${q?' trouvé'+(filtered.length>1?'s':''):''}`
     : '';
 
   /* nav badge */
   const nb = document.getElementById('linkCount');
-  nb.textContent = links.length ? `(${links.length})` : '';
+  if (nb) nb.textContent = links.length ? `(${links.length})` : '';
 
-  const list = document.getElementById('linksList');
-  list.innerHTML = '';
+  const container = document.getElementById('linksContainer');
+  container.innerHTML = '';
+
+  /* active view toggle */
+  document.getElementById('vtGrid')?.classList.toggle('on', viewMode==='grid');
+  document.getElementById('vtList')?.classList.toggle('on', viewMode==='list');
 
   if (!filtered.length) {
-    list.innerHTML = `<div class="empty"><div class="ei">${q ? '🔍' : '🔗'}</div>${q ? 'Aucun résultat pour « '+q+' »' : 'Aucun outil pour l\'instant.<br>Ajoutez votre premier lien ci-dessus !'}</div>`;
+    container.innerHTML = `<div class="empty">
+      <div class="ei">${q?'🔍':'🔗'}</div>
+      ${q ? 'Aucun résultat pour « '+q+' »'
+          : 'Collez votre première URL ci-dessus<br>pour ajouter un outil.'}
+    </div>`;
     return;
   }
 
-  filtered.forEach(link => {
-    const row = document.createElement('a');
-    row.className = 'litem';
-    row.href = link.url;
-    row.target = '_blank';
-    row.rel = 'noopener noreferrer';
-    row.dataset.id = link.id;
-    row.draggable = true;
-    row.innerHTML = `
-      <span class="litem-drag" title="Réordonner">⠿</span>
-      <span class="litem-icon">${link.emoji || '🔗'}</span>
-      <span class="litem-body">
-        <span class="litem-name">${link.name}</span>
-        <span class="litem-url">${link.url.replace(/^https?:\/\//,'')}</span>
-      </span>
-      <button class="litem-del" title="Supprimer" onclick="event.preventDefault();deleteLink(${link.id})">✕</button>`;
-
-    /* drag-to-reorder */
-    row.addEventListener('dragstart', e => {
-      dragSrc = link.id;
-      setTimeout(() => row.classList.add('dragging'), 0);
-      e.dataTransfer.effectAllowed = 'move';
+  if (viewMode === 'grid') {
+    /* ── GRILLE ── */
+    const grid = document.createElement('div');
+    grid.className = 'links-grid';
+    filtered.forEach(link => {
+      const tile = document.createElement('a');
+      tile.className = 'ltile';
+      tile.href = link.url; tile.target = '_blank'; tile.rel = 'noopener noreferrer';
+      tile.dataset.id = link.id;
+      tile.innerHTML = `
+        <button class="ltile-del" title="Supprimer"
+          onclick="event.preventDefault();deleteLink(${link.id})">✕</button>
+        <div class="ltile-ico">${link.emoji||'🔗'}</div>
+        <div class="ltile-name">${link.name}</div>
+        <div class="ltile-domain">${extractDomain(link.url)}</div>`;
+      attachDrag(tile, link.id, filtered);
+      grid.appendChild(tile);
     });
-    row.addEventListener('dragend', () => { row.classList.remove('dragging'); dragSrc = null; });
-    row.addEventListener('dragover', e => { e.preventDefault(); row.classList.add('drag-over'); });
-    row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
-    row.addEventListener('drop', e => {
-      e.preventDefault(); row.classList.remove('drag-over');
-      if (dragSrc === null || dragSrc === link.id) return;
-      const all = loadLinks();
-      const fromIdx = all.findIndex(l => l.id === dragSrc);
-      const toIdx   = all.findIndex(l => l.id === link.id);
-      if (fromIdx < 0 || toIdx < 0) return;
-      const [moved] = all.splice(fromIdx, 1);
-      all.splice(toIdx, 0, moved);
-      saveLinks(all);
-      renderLinks();
-    });
+    container.appendChild(grid);
 
-    list.appendChild(row);
-  });
+  } else {
+    /* ── LISTE ── */
+    const list = document.createElement('div');
+    list.className = 'links-list';
+    filtered.forEach(link => {
+      const row = document.createElement('a');
+      row.className = 'litem';
+      row.href = link.url; row.target = '_blank'; row.rel = 'noopener noreferrer';
+      row.dataset.id = link.id;
+      row.innerHTML = `
+        <span class="litem-drag" title="Réordonner">⠿</span>
+        <span class="litem-icon">${link.emoji||'🔗'}</span>
+        <span class="litem-body">
+          <span class="litem-name">${link.name}</span>
+          <span class="litem-url">${extractDomain(link.url)}</span>
+        </span>
+        <button class="litem-del" title="Supprimer"
+          onclick="event.preventDefault();deleteLink(${link.id})">✕</button>`;
+      attachDrag(row, link.id, filtered);
+      list.appendChild(row);
+    });
+    container.appendChild(list);
+  }
 }
-
-/* Keyboard shortcuts for add form */
-['lname','lurl'].forEach(id => {
-  document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') addLink(); });
-});
 
 renderLinks();
 </script>
