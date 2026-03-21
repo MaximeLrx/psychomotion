@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PsychoMotion — Bibliothèque d'Exercices en Psychomotricité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root {
+  --bg: #F6F3EE;
+  --bg-warm: #EDE8E0;
+  --surface: #FFFFFF;
+  --surface-hover: #FAFAF8;
+  --text: #1A1A1A;
+  --text-secondary: #6B6560;
+  --text-muted: #9E9790;
+  --accent: #C45D3E;
+  --accent-light: #E8A490;
+  --accent-bg: #FDF0EC;
+  --border: #E2DDD6;
+  --border-light: #EDE8E0;
+  --tag-motricite: #3E7C6A;
+  --tag-motricite-bg: #E8F4EF;
+  --tag-schema: #6A5E8C;
+  --tag-schema-bg: #EEEAF5;
+  --tag-memoire: #C45D3E;
+  --tag-memoire-bg: #FDF0EC;
+  --tag-attention: #2E7BAF;
+  --tag-attention-bg: #E6F0F8;
+  --tag-regulation: #B8860B;
+  --tag-regulation-bg: #FFF8E1;
+  --tag-spatial: #8B5E3C;
+  --tag-spatial-bg: #F5EDE6;
+  --tag-coordination: #5B8C5A;
+  --tag-coordination-bg: #EAF4EA;
+  --tag-tonus: #A0522D;
+  --tag-tonus-bg: #F8EDE5;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+  --shadow-xl: 0 20px 50px rgba(0,0,0,0.12);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ═══ HEADER ═══ */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(246,243,238,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-light);
+  padding: 0 2rem;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  background: var(--accent);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  transform: rotate(-3deg);
+  box-shadow: 0 2px 8px rgba(196,93,62,0.3);
+}
+
+.logo-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.logo-text span {
+  color: var(--accent);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  font-size: 16px;
+}
+
+.btn-icon:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(196,93,62,0.25);
+}
+
+.btn-primary:hover {
+  background: #B5522F;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(196,93,62,0.35);
+}
+
+/* ═══ HERO ═══ */
+.hero {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 2rem 2rem;
+}
+
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.8rem;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
+
+.hero h1 .accent { color: var(--accent); }
+
+.hero p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-weight: 300;
+  max-width: 550px;
+}
+
+/* ═══ STATS BAR ═══ */
+.stats-bar {
+  max-width: 1400px;
+  margin: 1.5rem auto 0;
+  padding: 0 2rem;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 50px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-pill .num {
+  font-weight: 700;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ═══ SEARCH & FILTERS ═══ */
+.controls {
+  max-width: 1400px;
+  margin: 2rem auto 0;
+  padding: 0 2rem;
+}
+
+.search-box {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 14px 20px 14px 50px;
+  background: var(--surface);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  transition: all 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(196,93,62,0.1);
+}
+
+.search-box input::placeholder { color: var(--text-muted); }
+
+.search-box .search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 18px;
+}
+
+.filter-section {
+  margin-bottom: 1rem;
+}
+
+.filter-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  padding: 7px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.filter-chip:hover {
+  border-color: var(--accent-light);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.filter-chip.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+/* ═══ GRID ═══ */
+.grid-container {
+  max-width: 1400px;
+  margin: 2rem auto 0;
+  padding: 0 2rem 4rem;
+}
+
+.exercises-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ═══ CARD ═══ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.2, 0, 0, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--card-accent, var(--accent));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+}
+
+.card:hover::before { opacity: 1; }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.card-emoji {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: var(--card-accent-bg, var(--accent-bg));
+}
+
+.card-type {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 50px;
+  background: var(--bg-warm);
+  color: var(--text-muted);
+}
+
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 0.35rem;
+  letter-spacing: -0.01em;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 50px;
+  letter-spacing: 0.02em;
+}
+
+.tag-motricite { background: var(--tag-motricite-bg); color: var(--tag-motricite); }
+.tag-schema { background: var(--tag-schema-bg); color: var(--tag-schema); }
+.tag-memoire { background: var(--tag-memoire-bg); color: var(--tag-memoire); }
+.tag-attention { background: var(--tag-attention-bg); color: var(--tag-attention); }
+.tag-regulation { background: var(--tag-regulation-bg); color: var(--tag-regulation); }
+.tag-spatial { background: var(--tag-spatial-bg); color: var(--tag-spatial); }
+.tag-coordination { background: var(--tag-coordination-bg); color: var(--tag-coordination); }
+.tag-tonus { background: var(--tag-tonus-bg); color: var(--tag-tonus); }
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.card-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.card-action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.card-action-btn:hover {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* ═══ EMPTY STATE ═══ */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  grid-column: 1 / -1;
+}
+
+.empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty-state h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-bottom: 0.5rem; }
+.empty-state p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* ═══ MODAL ═══ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-overlay.active { display: flex; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  animation: slideUp 0.35s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  padding: 2rem 2rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--bg-warm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 18px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.modal-close:hover { background: var(--border); }
+
+.modal-body { padding: 0 2rem 2rem; }
+
+.modal-emoji {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin-bottom: 1rem;
+}
+
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.8rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+
+.modal-subtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.modal-section {
+  margin-bottom: 1.5rem;
+}
+
+.modal-section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.modal-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.modal-description {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.modal-steps {
+  list-style: none;
+  counter-reset: step;
+}
+
+.modal-steps li {
+  counter-increment: step;
+  padding: 0.75rem 0 0.75rem 3rem;
+  position: relative;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.modal-steps li:last-child { border-bottom: none; }
+
+.modal-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.modal-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.modal-info-item {
+  padding: 0.75rem 1rem;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.modal-info-item .label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.modal-info-item .value {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.modal-variants {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.variant-item {
+  padding: 0.6rem 1rem;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.variant-item::before {
+  content: '◇';
+  color: var(--accent);
+  font-size: 0.7rem;
+}
+
+.modal-footer {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+/* ═══ QR MODAL ═══ */
+.qr-modal-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+.qr-modal-content h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.qr-modal-content p {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin-bottom: 1.5rem;
+}
+
+#qrcode-container {
+  display: inline-block;
+  padding: 1.5rem;
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 1.5rem;
+}
+
+#qrcode-container canvas, #qrcode-container img {
+  display: block;
+}
+
+.qr-exercise-name {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.qr-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  word-break: break-all;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ═══ ADD EXERCISE MODAL ═══ */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: var(--surface);
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.form-group textarea { resize: vertical; min-height: 80px; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.checkbox-chip {
+  padding: 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.checkbox-chip:hover { border-color: var(--accent-light); }
+
+.checkbox-chip.selected {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+/* ═══ PRINT STYLES ═══ */
+@media print {
+  body { background: white; }
+  .header, .hero, .stats-bar, .controls, .modal-overlay, .card-actions, .modal-footer, .no-print { display: none !important; }
+  .grid-container { padding: 0; }
+  .exercises-grid { display: block; }
+  .card { break-inside: avoid; margin-bottom: 1rem; border: 1px solid #ddd; box-shadow: none; }
+  .print-sheet { display: block !important; }
+}
+
+.print-sheet { display: none; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2rem; }
+  .exercises-grid { grid-template-columns: 1fr; }
+  .modal { margin: 1rem; border-radius: var(--radius-lg); }
+  .modal-info-grid { grid-template-columns: 1fr; }
+  .header-inner { padding: 0; }
+  .stats-bar { gap: 0.75rem; }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* ═══ ANIMATIONS ═══ */
+.card { animation: cardIn 0.4s ease both; }
+.card:nth-child(1) { animation-delay: 0.02s; }
+.card:nth-child(2) { animation-delay: 0.06s; }
+.card:nth-child(3) { animation-delay: 0.1s; }
+.card:nth-child(4) { animation-delay: 0.14s; }
+.card:nth-child(5) { animation-delay: 0.18s; }
+.card:nth-child(6) { animation-delay: 0.22s; }
+.card:nth-child(7) { animation-delay: 0.26s; }
+.card:nth-child(8) { animation-delay: 0.3s; }
+.card:nth-child(9) { animation-delay: 0.34s; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--text);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 2000;
+  transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
+  pointer-events: none;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">✦</div>
+      <div class="logo-text">Psycho<span>Motion</span></div>
+    </a>
+    <div class="header-actions">
+      <button class="btn-icon no-print" onclick="printAll()" title="Imprimer">🖨️</button>
+      <button class="btn-primary no-print" onclick="openAddModal()">
+        <span>＋</span> Ajouter
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <h1>Vos exercices de<br><span class="accent">psychomotricité</span></h1>
+  <p>Organisez, retrouvez et partagez toutes vos activités thérapeutiques en un seul endroit.</p>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<div class="stats-bar" id="statsBar"></div>
+
+<!-- ═══ SEARCH & FILTERS ═══ -->
+<div class="controls">
+  <div class="search-box">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="searchInput" placeholder="Rechercher un exercice, une fonction, un matériel…" oninput="filterExercises()">
+  </div>
+  <div class="filter-section">
+    <div class="filter-label">Fonction ciblée</div>
+    <div class="filter-row" id="functionFilters"></div>
+  </div>
+  <div class="filter-section" style="margin-top: 0.75rem;">
+    <div class="filter-label">Type d'activité</div>
+    <div class="filter-row" id="typeFilters"></div>
+  </div>
+</div>
+
+<!-- ═══ GRID ═══ -->
+<div class="grid-container">
+  <div class="exercises-grid" id="exercisesGrid"></div>
+</div>
+
+<!-- ═══ EXERCISE DETAIL MODAL ═══ -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-emoji" id="modalEmoji"></div>
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <div class="modal-subtitle" id="modalSubtitle"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('detailModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">Fonctions ciblées</div>
+        <div class="modal-tags" id="modalTags"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Informations</div>
+        <div class="modal-info-grid" id="modalInfo"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Description</div>
+        <div class="modal-description" id="modalDesc"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Déroulement</div>
+        <ol class="modal-steps" id="modalSteps"></ol>
+      </div>
+      <div class="modal-section" id="modalVariantsSection">
+        <div class="modal-section-title">Variantes & Adaptations</div>
+        <div class="modal-variants" id="modalVariants"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="editExercise()">✏️ Modifier</button>
+      <button class="btn-secondary" onclick="printExercise()">🖨️ Imprimer</button>
+      <button class="btn-secondary" onclick="showQR()">📱 QR Code</button>
+      <button class="btn-secondary" onclick="deleteExercise()">🗑️ Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ QR CODE MODAL ═══ -->
+<div class="modal-overlay" id="qrModal">
+  <div class="modal" style="max-width: 440px;">
+    <div class="modal-header">
+      <div></div>
+      <button class="modal-close" onclick="closeModal('qrModal')">✕</button>
+    </div>
+    <div class="qr-modal-content">
+      <h3>Partagez cet exercice</h3>
+      <p>Scannez ce QR code pour accéder à la fiche exercice</p>
+      <div id="qrcode-container"></div>
+      <div class="qr-exercise-name" id="qrExerciseName"></div>
+      <div class="qr-url" id="qrUrl"></div>
+    </div>
+    <div class="modal-footer" style="justify-content: center;">
+      <button class="btn-primary" onclick="printQR()">🖨️ Imprimer le QR Code</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADD EXERCISE MODAL ═══ -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal" style="max-width: 640px;">
+    <div class="modal-header">
+      <h2 class="modal-title" id="addModalTitle">Nouvel exercice</h2>
+      <button class="modal-close" onclick="closeModal('addModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nom de l'exercice</label>
+          <input type="text" id="formName" placeholder="Ex : Le parcours sensoriel">
+        </div>
+        <div class="form-group">
+          <label>Emoji</label>
+          <input type="text" id="formEmoji" placeholder="🎯" maxlength="4">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description courte</label>
+        <input type="text" id="formShortDesc" placeholder="Résumé en une phrase">
+      </div>
+      <div class="form-group">
+        <label>Description détaillée</label>
+        <textarea id="formDesc" placeholder="Décrivez l'exercice en détail…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Fonctions ciblées</label>
+        <div class="checkbox-group" id="formFunctions"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Type d'activité</label>
+          <select id="formType">
+            <option value="">— Choisir —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Durée estimée</label>
+          <input type="text" id="formDuration" placeholder="Ex : 15-20 min">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tranche d'âge</label>
+          <input type="text" id="formAge" placeholder="Ex : 5-10 ans">
+        </div>
+        <div class="form-group">
+          <label>Matériel nécessaire</label>
+          <input type="text" id="formMaterial" placeholder="Ex : Ballons, cerceaux">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Étapes du déroulement (une par ligne)</label>
+        <textarea id="formSteps" rows="5" placeholder="Disposer le matériel au sol&#10;Demander au patient de…&#10;…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Variantes (une par ligne, optionnel)</label>
+        <textarea id="formVariants" rows="3" placeholder="Yeux fermés pour augmenter la difficulté&#10;Ajouter un rythme musical&#10;…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('addModal')">Annuler</button>
+      <button class="btn-primary" id="formSaveBtn" onclick="saveExercise()">✓ Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══ DATA ═══
+const FUNCTIONS = [
+  'Motricité globale', 'Motricité fine', 'Schéma corporel',
+  'Mémoire', 'Attention', 'Régulation émotionnelle',
+  'Repérage spatial', 'Coordination', 'Tonus'
+];
+
+const FUNCTION_TAG_MAP = {
+  'Motricité globale': 'tag-motricite',
+  'Motricité fine': 'tag-motricite',
+  'Schéma corporel': 'tag-schema',
+  'Mémoire': 'tag-memoire',
+  'Attention': 'tag-attention',
+  'Régulation émotionnelle': 'tag-regulation',
+  'Repérage spatial': 'tag-spatial',
+  'Coordination': 'tag-coordination',
+  'Tonus': 'tag-tonus'
+};
+
+const TYPES = ['Jeu', 'Fiche écrite', 'Activité corporelle', 'Exercice verbal', 'Relaxation', 'Parcours moteur'];
+
+const DEFAULT_EXERCISES = [
+  {
+    id: 'ex1',
+    name: 'Le parcours sensoriel',
+    emoji: '🦶',
+    shortDesc: 'Parcours pieds nus sur différentes textures pour stimuler la proprioception.',
+    description: 'Le patient évolue pieds nus sur un parcours composé de différentes textures (mousse, galets, tissu rugueux, sable, tapis à picots). Il doit verbaliser ses ressentis et adapter sa marche à chaque surface. Cet exercice travaille la conscience corporelle, l\'équilibre et la régulation sensorielle.',
+    functions: ['Schéma corporel', 'Motricité globale', 'Régulation émotionnelle'],
+    type: 'Parcours moteur',
+    duration: '20 min',
+    age: '4-12 ans',
+    material: 'Tapis de textures variées, galets, mousse, bac à sable',
+    steps: [
+      'Installer les différentes textures au sol en un parcours linéaire.',
+      'Inviter le patient à retirer ses chaussures et chaussettes.',
+      'Le guider sur le parcours en lui demandant de nommer chaque sensation.',
+      'Varier la vitesse : lente, puis rapide, puis en équilibre sur un pied.',
+      'Terminer par un temps calme allongé sur un tapis doux.'
+    ],
+    variants: [
+      'Yeux bandés pour renforcer les sensations proprioceptives.',
+      'Ajouter des consignes mnésiques : mémoriser l\'ordre des textures.',
+      'Parcours chronométré pour les patients plus âgés.'
+    ]
+  },
+  {
+    id: 'ex2',
+    name: 'Le jeu des statues',
+    emoji: '🗿',
+    shortDesc: 'Alterner mouvement et immobilité pour travailler l\'inhibition motrice.',
+    description: 'Sur une musique, le patient danse ou se déplace librement. Quand la musique s\'arrête, il doit se figer immédiatement en statue. Ce jeu classique travaille le contrôle moteur, l\'inhibition, l\'écoute attentive et la régulation tonique.',
+    functions: ['Attention', 'Tonus', 'Régulation émotionnelle'],
+    type: 'Jeu',
+    duration: '10-15 min',
+    age: '3-10 ans',
+    material: 'Enceinte Bluetooth, playlist musicale variée',
+    steps: [
+      'Définir un espace de jeu sécurisé et dégagé.',
+      'Expliquer la règle : bouger quand la musique joue, se figer quand elle s\'arrête.',
+      'Lancer la musique et observer la qualité des mouvements.',
+      'Arrêter la musique à intervalles irréguliers.',
+      'Valoriser la qualité de l\'arrêt : immobilité complète, posture tenue.'
+    ],
+    variants: [
+      'Imposer des postures spécifiques lors de l\'arrêt (sur un pied, bras en l\'air).',
+      'Version inversée : bouger quand la musique s\'arrête.',
+      'Ajouter des niveaux de vitesse progressive.'
+    ]
+  },
+  {
+    id: 'ex3',
+    name: 'Memory corporel',
+    emoji: '🧠',
+    shortDesc: 'Mémoriser et reproduire des séquences de gestes de complexité croissante.',
+    description: 'Le thérapeute effectue une séquence de gestes (toucher le nez, lever un bras, taper du pied…) que le patient doit reproduire dans le bon ordre. La complexité augmente progressivement en ajoutant des gestes. Travaille la mémoire de travail, le schéma corporel et l\'attention soutenue.',
+    functions: ['Mémoire', 'Schéma corporel', 'Attention'],
+    type: 'Jeu',
+    duration: '10-15 min',
+    age: '5-14 ans',
+    material: 'Aucun (ou cartes images de gestes en option)',
+    steps: [
+      'Se placer face au patient dans un espace calme.',
+      'Commencer par une séquence de 2 gestes simples.',
+      'Demander au patient de les reproduire dans l\'ordre.',
+      'Ajouter un geste à chaque réussite.',
+      'En cas d\'échec, reprendre la séquence précédente et encourager.'
+    ],
+    variants: [
+      'Utiliser des cartes images plutôt que la démonstration.',
+      'Ajouter un rythme (frapper dans les mains entre chaque geste).',
+      'Reproduire la séquence en miroir (inversion gauche-droite).'
+    ]
+  },
+  {
+    id: 'ex4',
+    name: 'Le souffle magique',
+    emoji: '🌬️',
+    shortDesc: 'Exercices de respiration ludiques pour la régulation émotionnelle et tonique.',
+    description: 'À travers différents supports (plumes, bulles, balle de ping-pong), le patient explore le contrôle de son souffle. L\'objectif est de travailler la régulation tonique, la détente et la conscience respiratoire dans un cadre ludique et apaisant.',
+    functions: ['Régulation émotionnelle', 'Tonus', 'Attention'],
+    type: 'Relaxation',
+    duration: '10-15 min',
+    age: '3-99 ans',
+    material: 'Plumes, bulles de savon, balle de ping-pong, pailles',
+    steps: [
+      'Proposer au patient de s\'installer confortablement (assis ou allongé).',
+      'Commencer par des respirations lentes : inspirer par le nez, expirer par la bouche.',
+      'Introduire la plume : souffler doucement pour la maintenir en l\'air.',
+      'Passer aux bulles de savon : souffler régulièrement et lentement.',
+      'Terminer par la respiration ventrale : poser un objet léger sur le ventre et le faire monter/descendre.'
+    ],
+    variants: [
+      'Course de balles de ping-pong avec les pailles sur une table.',
+      'Souffler sur une bougie sans l\'éteindre (contrôle fin).',
+      'Associer des couleurs imaginaires au souffle (inspiration bleue, expiration rouge).'
+    ]
+  },
+  {
+    id: 'ex5',
+    name: 'Labyrinthe au doigt',
+    emoji: '✏️',
+    shortDesc: 'Tracer des labyrinthes de difficulté croissante pour la motricité fine.',
+    description: 'Le patient trace le chemin dans des labyrinthes imprimés, d\'abord avec le doigt puis avec un crayon. Cet exercice sollicite la coordination oculomanuelle, la planification visuo-spatiale et la motricité fine. La difficulté augmente avec la complexité des tracés.',
+    functions: ['Motricité fine', 'Repérage spatial', 'Attention'],
+    type: 'Fiche écrite',
+    duration: '10-20 min',
+    age: '4-12 ans',
+    material: 'Fiches labyrinthes imprimées, crayons de couleur',
+    steps: [
+      'Présenter le labyrinthe et identifier l\'entrée et la sortie.',
+      'Demander au patient de trouver le chemin avec le doigt d\'abord.',
+      'Puis tracer le chemin au crayon sans toucher les bords.',
+      'Augmenter progressivement la complexité.',
+      'Chronométrer les niveaux avancés pour ajouter un défi.'
+    ],
+    variants: [
+      'Main non-dominante pour travailler la latéralité.',
+      'Labyrinthes en 3D avec des billes.',
+      'Créer son propre labyrinthe pour un camarade.'
+    ]
+  },
+  {
+    id: 'ex6',
+    name: 'Jacques a dit corporel',
+    emoji: '🫡',
+    shortDesc: 'Version psychomotrice du classique pour travailler l\'inhibition et le schéma corporel.',
+    description: 'Le thérapeute donne des consignes corporelles (« Jacques a dit : touche ton genou gauche ») que le patient doit exécuter uniquement si la phrase commence par « Jacques a dit ». Cet exercice combine l\'inhibition cognitive, la connaissance du schéma corporel, la latéralité et l\'écoute attentive.',
+    functions: ['Attention', 'Schéma corporel', 'Coordination'],
+    type: 'Jeu',
+    duration: '10 min',
+    age: '4-12 ans',
+    material: 'Aucun',
+    steps: [
+      'Rappeler la règle : n\'exécuter que les consignes précédées de « Jacques a dit ».',
+      'Commencer lentement avec des consignes simples (lever les bras, sauter).',
+      'Accélérer progressivement le rythme.',
+      'Introduire des consignes de latéralité (main gauche sur l\'oreille droite).',
+      'Valoriser les bonnes inhibitions autant que les bonnes exécutions.'
+    ],
+    variants: [
+      'Inverser les rôles : le patient devient « Jacques ».',
+      'Ajouter des consignes enchaînées (2 ou 3 gestes de suite).',
+      'Version silencieuse avec des gestes montrés au lieu de consignes verbales.'
+    ]
+  },
+  {
+    id: 'ex7',
+    name: 'La rivière imaginaire',
+    emoji: '🏞️',
+    shortDesc: 'Traverser un espace en sautant sur des « pierres » pour la coordination.',
+    description: 'Des marqueurs au sol représentent des pierres dans une rivière imaginaire. Le patient doit traverser en sautant de pierre en pierre sans tomber dans l\'eau. L\'exercice travaille l\'équilibre dynamique, la coordination, la planification motrice et le repérage spatial.',
+    functions: ['Coordination', 'Motricité globale', 'Repérage spatial'],
+    type: 'Parcours moteur',
+    duration: '15-20 min',
+    age: '4-10 ans',
+    material: 'Cerceaux, marqueurs au sol, ruban adhésif de couleur',
+    steps: [
+      'Disposer les cerceaux et marqueurs au sol en traçant un parcours sinueux.',
+      'Définir les limites de la « rivière » avec du ruban.',
+      'Le patient doit planifier visuellement son trajet avant de commencer.',
+      'Traverser en posant les pieds uniquement sur les « pierres ».',
+      'Augmenter la distance entre les pierres au fur et à mesure.'
+    ],
+    variants: [
+      'Pierres numérotées à suivre dans l\'ordre.',
+      'Pierres de couleurs avec consignes spécifiques par couleur.',
+      'Traversée à reculons ou en pas chassés.'
+    ]
+  },
+  {
+    id: 'ex8',
+    name: 'Le chef d\'orchestre',
+    emoji: '🎵',
+    shortDesc: 'Reproduire des rythmes de complexité croissante avec le corps.',
+    description: 'Le thérapeute frappe un rythme (mains, pieds, cuisses) que le patient doit reproduire. Commence par des rythmes simples et évolue vers des séquences complexes à plusieurs « instruments corporels ». Excellent pour le tonus, la mémoire séquentielle et la coordination.',
+    functions: ['Coordination', 'Mémoire', 'Tonus'],
+    type: 'Activité corporelle',
+    duration: '10-15 min',
+    age: '5-14 ans',
+    material: 'Optionnel : petites percussions, claves, tambourin',
+    steps: [
+      'S\'asseoir face au patient et définir les « instruments » : mains, cuisses, pieds.',
+      'Frapper un rythme simple de 4 temps et demander la reproduction.',
+      'Complexifier : alterner les instruments corporels dans une même séquence.',
+      'Introduire des rythmes asymétriques (main droite ≠ main gauche).',
+      'Le patient invente ses propres rythmes à faire reproduire au thérapeute.'
+    ],
+    variants: [
+      'En groupe : chacun gère un instrument corporel différent.',
+      'Les yeux fermés pour stimuler l\'écoute.',
+      'Ajouter de vrais instruments de percussion.'
+    ]
+  },
+  {
+    id: 'ex9',
+    name: 'La boîte à émotions',
+    emoji: '🎭',
+    shortDesc: 'Identifier et exprimer les émotions à travers le corps et le visage.',
+    description: 'Des cartes émotions sont piochées au hasard. Le patient doit mimer l\'émotion avec son corps et son visage, puis raconter une situation associée. Cet exercice favorise la conscience émotionnelle, l\'expression corporelle et la régulation. Adapté à de nombreuses prises en charge.',
+    functions: ['Régulation émotionnelle', 'Schéma corporel'],
+    type: 'Jeu',
+    duration: '15-20 min',
+    age: '4-14 ans',
+    material: 'Cartes émotions illustrées, miroir',
+    steps: [
+      'Disposer les cartes émotions face cachée.',
+      'Le patient pioche une carte et nomme l\'émotion.',
+      'Il mime cette émotion devant le miroir : visage ET posture corporelle.',
+      'Discussion : « Quand as-tu ressenti ça ? Où dans ton corps ? ».',
+      'Explorer les stratégies de régulation pour chaque émotion.'
+    ],
+    variants: [
+      'Devinette : mimer sans montrer la carte, l\'autre doit deviner.',
+      'Graduer l\'intensité : joie légère → joie immense.',
+      'Dessiner la silhouette corporelle et colorier où se loge chaque émotion.'
+    ]
+  }
+];
+
+// ═══ STATE ═══
+let exercises = [];
+let activeFilters = { functions: [], types: [] };
+let currentExerciseId = null;
+let editingId = null;
+
+// ═══ STORAGE ═══
+function loadExercises() {
+  const stored = localStorage.getItem('psychomotion_exercises');
+  if (stored) {
+    exercises = JSON.parse(stored);
+  } else {
+    exercises = [...DEFAULT_EXERCISES];
+    saveToStorage();
+  }
+}
+
+function saveToStorage() {
+  localStorage.setItem('psychomotion_exercises', JSON.stringify(exercises));
+}
+
+// ═══ INIT ═══
+function init() {
+  loadExercises();
+  renderFilters();
+  renderExercises();
+  updateStats();
+}
+
+// ═══ FILTERS ═══
+function renderFilters() {
+  const funcContainer = document.getElementById('functionFilters');
+  funcContainer.innerHTML = FUNCTIONS.map(f =>
+    `<button class="filter-chip" data-function="${f}" onclick="toggleFunctionFilter('${f}')">${f}</button>`
+  ).join('');
+
+  const typeContainer = document.getElementById('typeFilters');
+  typeContainer.innerHTML = TYPES.map(t =>
+    `<button class="filter-chip" data-type="${t}" onclick="toggleTypeFilter('${t}')">${t}</button>`
+  ).join('');
+}
+
+function toggleFunctionFilter(func) {
+  const idx = activeFilters.functions.indexOf(func);
+  if (idx > -1) activeFilters.functions.splice(idx, 1);
+  else activeFilters.functions.push(func);
+  
+  document.querySelectorAll('[data-function]').forEach(btn => {
+    btn.classList.toggle('active', activeFilters.functions.includes(btn.dataset.function));
+  });
+  filterExercises();
+}
+
+function toggleTypeFilter(type) {
+  const idx = activeFilters.types.indexOf(type);
+  if (idx > -1) activeFilters.types.splice(idx, 1);
+  else activeFilters.types.push(type);
+  
+  document.querySelectorAll('[data-type]').forEach(btn => {
+    btn.classList.toggle('active', activeFilters.types.includes(btn.dataset.type));
+  });
+  filterExercises();
+}
+
+// ═══ RENDER ═══
+function renderExercises(list) {
+  const data = list || exercises;
+  const grid = document.getElementById('exercisesGrid');
+  
+  if (data.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🔍</div>
+        <h3>Aucun exercice trouvé</h3>
+        <p>Essayez d'autres filtres ou ajoutez un nouvel exercice.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = data.map(ex => {
+    const tagClass = ex.functions[0] ? FUNCTION_TAG_MAP[ex.functions[0]] || 'tag-motricite' : 'tag-motricite';
+    const accentColor = getComputedStyle(document.documentElement).getPropertyValue(`--${tagClass.replace('tag-', 'tag-')}`) || 'var(--accent)';
+    
+    return `
+    <div class="card" onclick="openDetail('${ex.id}')" style="--card-accent: var(--${tagClass.replace('tag-', 'tag-')}); --card-accent-bg: var(--${tagClass.replace('tag-', 'tag-')}-bg);">
+      <div class="card-header">
+        <div class="card-emoji" style="background: var(--${tagClass}-bg);">${ex.emoji}</div>
+        <div class="card-type">${ex.type}</div>
+      </div>
+      <div class="card-title">${ex.name}</div>
+      <div class="card-desc">${ex.shortDesc}</div>
+      <div class="card-tags">
+        ${ex.functions.map(f => `<span class="tag ${FUNCTION_TAG_MAP[f] || ''}">${f}</span>`).join('')}
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">
+          <span>⏱ ${ex.duration}</span>
+          <span>👤 ${ex.age}</span>
+        </div>
+        <div class="card-actions">
+          <button class="card-action-btn" onclick="event.stopPropagation(); showQRForId('${ex.id}')" title="QR Code">📱</button>
+          <button class="card-action-btn" onclick="event.stopPropagation(); printSingleExercise('${ex.id}')" title="Imprimer">🖨️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterExercises() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  let filtered = exercises.filter(ex => {
+    const matchSearch = !query ||
+      ex.name.toLowerCase().includes(query) ||
+      ex.shortDesc.toLowerCase().includes(query) ||
+      ex.description.toLowerCase().includes(query) ||
+      ex.functions.some(f => f.toLowerCase().includes(query)) ||
+      ex.type.toLowerCase().includes(query) ||
+      (ex.material && ex.material.toLowerCase().includes(query));
+
+    const matchFunction = activeFilters.functions.length === 0 ||
+      activeFilters.functions.some(f => ex.functions.includes(f));
+
+    const matchType = activeFilters.types.length === 0 || activeFilters.types.includes(ex.type);
+
+    return matchSearch && matchFunction && matchType;
+  });
+
+  renderExercises(filtered);
+}
+
+function updateStats() {
+  const bar = document.getElementById('statsBar');
+  const funcCount = [...new Set(exercises.flatMap(e => e.functions))].length;
+  const typeCount = [...new Set(exercises.map(e => e.type))].length;
+  bar.innerHTML = `
+    <div class="stat-pill">📋 <span class="num">${exercises.length}</span> exercices</div>
+    <div class="stat-pill">🧩 <span class="num">${funcCount}</span> fonctions</div>
+    <div class="stat-pill">🎯 <span class="num">${typeCount}</span> types d'activité</div>
+  `;
+}
+
+// ═══ DETAIL MODAL ═══
+function openDetail(id) {
+  const ex = exercises.find(e => e.id === id);
+  if (!ex) return;
+  currentExerciseId = id;
+
+  const tagClass = FUNCTION_TAG_MAP[ex.functions[0]] || 'tag-motricite';
+  document.getElementById('modalEmoji').innerHTML = ex.emoji;
+  document.getElementById('modalEmoji').style.background = `var(--${tagClass}-bg)`;
+  document.getElementById('modalTitle').textContent = ex.name;
+  document.getElementById('modalSubtitle').textContent = `${ex.type} · ${ex.duration} · ${ex.age}`;
+  
+  document.getElementById('modalTags').innerHTML = ex.functions.map(f =>
+    `<span class="tag ${FUNCTION_TAG_MAP[f] || ''}">${f}</span>`
+  ).join('');
+
+  document.getElementById('modalInfo').innerHTML = `
+    <div class="modal-info-item"><div class="label">Durée</div><div class="value">${ex.duration}</div></div>
+    <div class="modal-info-item"><div class="label">Âge</div><div class="value">${ex.age}</div></div>
+    <div class="modal-info-item"><div class="label">Type</div><div class="value">${ex.type}</div></div>
+    <div class="modal-info-item"><div class="label">Matériel</div><div class="value">${ex.material || 'Aucun'}</div></div>
+  `;
+
+  document.getElementById('modalDesc').textContent = ex.description;
+  document.getElementById('modalSteps').innerHTML = ex.steps.map(s => `<li>${s}</li>`).join('');
+
+  const varSection = document.getElementById('modalVariantsSection');
+  if (ex.variants && ex.variants.length > 0) {
+    varSection.style.display = '';
+    document.getElementById('modalVariants').innerHTML = ex.variants.map(v =>
+      `<div class="variant-item">${v}</div>`
+    ).join('');
+  } else {
+    varSection.style.display = 'none';
+  }
+
+  document.getElementById('detailModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// ═══ QR CODE ═══
+function showQR() {
+  showQRForId(currentExerciseId);
+}
+
+function showQRForId(id) {
+  const ex = exercises.find(e => e.id === id);
+  if (!ex) return;
+  currentExerciseId = id;
+
+  const url = window.location.href.split('?')[0].split('#')[0] + '?exercise=' + encodeURIComponent(ex.id);
+  
+  const container = document.getElementById('qrcode-container');
+  container.innerHTML = '';
+  new QRCode(container, {
+    text: url,
+    width: 200,
+    height: 200,
+    colorDark: '#1A1A1A',
+    colorLight: '#FFFFFF',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  document.getElementById('qrExerciseName').textContent = ex.name;
+  document.getElementById('qrUrl').textContent = url;
+  document.getElementById('qrModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function printQR() {
+  const canvas = document.querySelector('#qrcode-container canvas');
+  if (!canvas) return;
+  const ex = exercises.find(e => e.id === currentExerciseId);
+  const w = window.open('', '_blank');
+  w.document.write(`
+    <html><head><title>QR - ${ex?.name || ''}</title>
+    <style>body{font-family:sans-serif;text-align:center;padding:3rem;}
+    h2{margin-bottom:0.5rem;} p{color:#666;margin-bottom:2rem;}</style></head>
+    <body><h2>${ex?.name || ''}</h2>
+    <p>Scannez ce QR code pour accéder à la fiche exercice</p>
+    <img src="${canvas.toDataURL()}" style="width:250px;height:250px;">
+    <script>setTimeout(()=>window.print(),300)<\/script></body></html>`);
+}
+
+// ═══ ADD / EDIT EXERCISE ═══
+function openAddModal(prefill = null) {
+  editingId = prefill ? prefill.id : null;
+  
+  document.getElementById('addModalTitle').textContent = prefill ? 'Modifier l\'exercice' : 'Nouvel exercice';
+  document.getElementById('formSaveBtn').textContent = prefill ? '✓ Enregistrer les modifications' : '✓ Enregistrer';
+
+  document.getElementById('formName').value = prefill ? prefill.name : '';
+  document.getElementById('formEmoji').value = prefill ? prefill.emoji : '';
+  document.getElementById('formShortDesc').value = prefill ? prefill.shortDesc : '';
+  document.getElementById('formDesc').value = prefill ? prefill.description : '';
+  document.getElementById('formDuration').value = prefill ? prefill.duration : '';
+  document.getElementById('formAge').value = prefill ? prefill.age : '';
+  document.getElementById('formMaterial').value = prefill ? prefill.material : '';
+  document.getElementById('formSteps').value = prefill ? prefill.steps.join('\n') : '';
+  document.getElementById('formVariants').value = prefill && prefill.variants ? prefill.variants.join('\n') : '';
+
+  const typeSelect = document.getElementById('formType');
+  typeSelect.innerHTML = '<option value="">— Choisir —</option>' +
+    TYPES.map(t => `<option value="${t}" ${prefill && prefill.type === t ? 'selected' : ''}>${t}</option>`).join('');
+
+  const funcContainer = document.getElementById('formFunctions');
+  funcContainer.innerHTML = FUNCTIONS.map(f => {
+    const isSelected = prefill && prefill.functions.includes(f);
+    return `<div class="checkbox-chip ${isSelected ? 'selected' : ''}" data-func="${f}" onclick="this.classList.toggle('selected')">${f}</div>`;
+  }).join('');
+
+  document.getElementById('addModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function editExercise() {
+  const ex = exercises.find(e => e.id === currentExerciseId);
+  if (!ex) return;
+  closeModal('detailModal');
+  setTimeout(() => openAddModal(ex), 200);
+}
+
+function saveExercise() {
+  const name = document.getElementById('formName').value.trim();
+  if (!name) { showToast('Veuillez saisir un nom d\'exercice.'); return; }
+
+  const selectedFuncs = [...document.querySelectorAll('#formFunctions .selected')].map(el => el.dataset.func);
+  if (selectedFuncs.length === 0) { showToast('Sélectionnez au moins une fonction.'); return; }
+
+  const type = document.getElementById('formType').value;
+  if (!type) { showToast('Choisissez un type d\'activité.'); return; }
+
+  const stepsText = document.getElementById('formSteps').value.trim();
+  const steps = stepsText ? stepsText.split('\n').filter(s => s.trim()) : [];
+
+  const variantsText = document.getElementById('formVariants').value.trim();
+  const variants = variantsText ? variantsText.split('\n').filter(v => v.trim()) : [];
+
+  const exerciseData = {
+    id: editingId || 'ex_' + Date.now(),
+    name,
+    emoji: document.getElementById('formEmoji').value.trim() || '🎯',
+    shortDesc: document.getElementById('formShortDesc').value.trim() || name,
+    description: document.getElementById('formDesc').value.trim() || '',
+    functions: selectedFuncs,
+    type,
+    duration: document.getElementById('formDuration').value.trim() || '—',
+    age: document.getElementById('formAge').value.trim() || '—',
+    material: document.getElementById('formMaterial').value.trim() || 'Aucun',
+    steps,
+    variants
+  };
+
+  if (editingId) {
+    const idx = exercises.findIndex(e => e.id === editingId);
+    if (idx > -1) exercises[idx] = exerciseData;
+    showToast('✓ Exercice modifié avec succès !');
+  } else {
+    exercises.unshift(exerciseData);
+    showToast('✓ Exercice ajouté avec succès !');
+  }
+
+  editingId = null;
+  saveToStorage();
+  renderExercises();
+  updateStats();
+  closeModal('addModal');
+}
+
+function deleteExercise() {
+  if (!currentExerciseId) return;
+  if (!confirm('Supprimer cet exercice ?')) return;
+  exercises = exercises.filter(e => e.id !== currentExerciseId);
+  saveToStorage();
+  renderExercises();
+  updateStats();
+  closeModal('detailModal');
+  showToast('Exercice supprimé.');
+}
+
+// ═══ PRINT ═══
+function printExercise() {
+  const ex = exercises.find(e => e.id === currentExerciseId);
+  if (!ex) return;
+  const w = window.open('', '_blank');
+  w.document.write(generatePrintHTML([ex]));
+  w.document.close();
+  setTimeout(() => w.print(), 400);
+}
+
+function printSingleExercise(id) {
+  const ex = exercises.find(e => e.id === id);
+  if (!ex) return;
+  const w = window.open('', '_blank');
+  w.document.write(generatePrintHTML([ex]));
+  w.document.close();
+  setTimeout(() => w.print(), 400);
+}
+
+function printAll() {
+  const w = window.open('', '_blank');
+  w.document.write(generatePrintHTML(exercises));
+  w.document.close();
+  setTimeout(() => w.print(), 400);
+}
+
+function generatePrintHTML(exList) {
+  return `<html><head><meta charset="UTF-8"><title>PsychoMotion — Fiches Exercices</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 2rem; color: #1A1A1A; }
+    .exercise-page { page-break-after: always; padding: 1.5rem; border: 1px solid #E2DDD6; border-radius: 16px; margin-bottom: 1.5rem; }
+    .exercise-page:last-child { page-break-after: auto; }
+    .ex-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .ex-emoji { font-size: 2.5rem; }
+    h1 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; margin: 0; }
+    .ex-meta { color: #6B6560; font-size: 0.85rem; margin-top: 0.25rem; }
+    .tags { display: flex; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap; }
+    .tag-print { padding: 3px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; border: 1px solid #ddd; }
+    .section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #9E9790; margin: 1.25rem 0 0.4rem; }
+    .desc { font-size: 0.9rem; line-height: 1.7; color: #4A4A4A; }
+    ol { padding-left: 1.5rem; }
+    ol li { font-size: 0.88rem; line-height: 1.6; color: #4A4A4A; margin-bottom: 0.4rem; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.5rem; }
+    .info-item { padding: 0.5rem; background: #f6f3ee; border-radius: 8px; }
+    .info-item .label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; color: #9E9790; }
+    .info-item .value { font-weight: 600; font-size: 0.85rem; }
+    .variant { padding: 0.4rem 0; font-size: 0.85rem; color: #6B6560; }
+    .variant::before { content: '◇ '; color: #C45D3E; }
+    .footer-print { text-align: center; color: #9E9790; font-size: 0.75rem; margin-top: 2rem; font-style: italic; }
+  </style></head><body>
+  ${exList.map(ex => `
+    <div class="exercise-page">
+      <div class="ex-header">
+        <div class="ex-emoji">${ex.emoji}</div>
+        <div><h1>${ex.name}</h1><div class="ex-meta">${ex.type} · ${ex.duration} · ${ex.age}</div></div>
+      </div>
+      <div class="tags">${ex.functions.map(f => `<span class="tag-print">${f}</span>`).join('')}</div>
+      <div class="info-grid">
+        <div class="info-item"><div class="label">Durée</div><div class="value">${ex.duration}</div></div>
+        <div class="info-item"><div class="label">Âge</div><div class="value">${ex.age}</div></div>
+        <div class="info-item"><div class="label">Type</div><div class="value">${ex.type}</div></div>
+        <div class="info-item"><div class="label">Matériel</div><div class="value">${ex.material || 'Aucun'}</div></div>
+      </div>
+      <div class="section-title">Description</div>
+      <div class="desc">${ex.description}</div>
+      <div class="section-title">Déroulement</div>
+      <ol>${ex.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+      ${ex.variants && ex.variants.length ? `
+        <div class="section-title">Variantes</div>
+        ${ex.variants.map(v => `<div class="variant">${v}</div>`).join('')}
+      ` : ''}
+    </div>
+  `).join('')}
+  <div class="footer-print">PsychoMotion — Bibliothèque d'exercices en psychomotricité</div>
+  </body></html>`;
+}
+
+// ═══ TOAST ═══
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ═══ URL PARAM ═══
+function checkUrlParam() {
+  const params = new URLSearchParams(window.location.search);
+  const exId = params.get('exercise');
+  if (exId) {
+    setTimeout(() => openDetail(exId), 300);
+  }
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+});
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => {
+      m.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  }
+});
+
+init();
+checkUrlParam();
+</script>
+</body>
+</html>
