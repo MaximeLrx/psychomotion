@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur — Numéros Manquants</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap');
+
+  :root {
+    --blue: #2196F3;
+    --blue-light: #e3f2fd;
+    --blue-mid: #bbdefb;
+    --teal: #00BCD4;
+    --teal-light: #e0f7fa;
+    --ink: #1a2340;
+    --gray: #6b7a99;
+    --gray-light: #f0f4f8;
+    --border: #d0dae8;
+    --white: #ffffff;
+    --shadow: 0 2px 12px rgba(33,150,243,0.10);
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f4f8fc;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--white);
+    border-bottom: 2px solid var(--blue-mid);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow);
+  }
+  header .logo {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--blue);
+    letter-spacing: -0.5px;
+  }
+  header .logo span { color: var(--teal); }
+  header .subtitle {
+    font-size: 0.82rem;
+    color: var(--gray);
+    font-weight: 600;
+  }
+
+  /* ── LAYOUT ── */
+  .app { display: flex; min-height: calc(100vh - 70px); }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 300px;
+    min-width: 260px;
+    background: var(--white);
+    border-right: 2px solid var(--blue-mid);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+
+  .sidebar h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--blue-light);
+  }
+
+  .ctrl-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .ctrl-group label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .ctrl-group input[type="number"],
+  .ctrl-group select {
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--gray-light);
+    transition: border-color .2s;
+    width: 100%;
+  }
+  .ctrl-group input[type="number"]:focus,
+  .ctrl-group select:focus {
+    outline: none;
+    border-color: var(--blue);
+    background: var(--white);
+  }
+
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* sequences list */
+  .seq-list { display: flex; flex-direction: column; gap: 8px; }
+  .seq-item {
+    background: var(--gray-light);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+  }
+  .seq-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .seq-item-title {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--blue);
+  }
+  .seq-item .row-2 { margin-top: 2px; }
+  .seq-item input[type="number"] {
+    padding: 5px 8px;
+    font-size: 0.82rem;
+  }
+  .seq-remove {
+    background: none;
+    border: none;
+    color: #e57373;
+    font-size: 1.1rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 5px;
+    transition: background .15s;
+  }
+  .seq-remove:hover { background: #ffeaea; }
+
+  .btn-add-seq {
+    border: 2px dashed var(--blue);
+    background: var(--blue-light);
+    color: var(--blue);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    padding: 9px;
+    cursor: pointer;
+    transition: background .2s;
+    width: 100%;
+  }
+  .btn-add-seq:hover { background: var(--blue-mid); }
+
+  /* action buttons */
+  .actions { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 16px; border-top: 2px solid var(--blue-light); }
+
+  .btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 16px;
+    cursor: pointer;
+    transition: transform .1s, box-shadow .15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(33,150,243,0.30);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 20px rgba(33,150,243,0.40); }
+  .btn-secondary {
+    background: var(--teal);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(0,188,212,0.25);
+  }
+  .btn-outline {
+    background: var(--white);
+    color: var(--blue);
+    border: 2px solid var(--blue);
+  }
+
+  /* ── PREVIEW ── */
+  .preview-area {
+    flex: 1;
+    padding: 28px 32px;
+    overflow-y: auto;
+  }
+
+  .preview-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .preview-toolbar h3 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* ── SHEET (feuille imprimable) ── */
+  #sheet {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 28px 32px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .sheet-header {
+    background: var(--blue-light);
+    border: 2px solid var(--blue-mid);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 22px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .sheet-header span { color: var(--blue); }
+
+  .sheet-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--gray);
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  .sheet-meta .field {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sheet-meta .field-line {
+    display: inline-block;
+    width: 130px;
+    border-bottom: 2px solid var(--border);
+    height: 16px;
+  }
+
+  .exercises-grid {
+    display: grid;
+    gap: 22px;
+  }
+  .exercises-grid.cols-1 { grid-template-columns: 1fr; }
+  .exercises-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .exercises-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  /* ── EXERCISE CARD ── */
+  .exercise {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .exercise-num {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--blue);
+    padding: 6px 12px 2px;
+  }
+
+  .seq-table-wrap { padding: 0 10px 10px; }
+  .seq-label {
+    background: #e8f4fb;
+    border: 1.5px solid var(--blue-mid);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 5px 8px;
+    margin-bottom: 6px;
+  }
+
+  .num-grid {
+    display: grid;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .num-cell {
+    border-right: 1.5px solid var(--border);
+    border-bottom: 1.5px solid var(--border);
+    text-align: center;
+    padding: 6px 4px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .num-cell:last-child { border-right: none; }
+  .num-grid > .num-cell:nth-last-child(-n+5) { border-bottom: none; }
+
+  .missing-section { padding: 8px 10px 12px; }
+  .missing-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .missing-boxes {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .missing-box {
+    width: 36px;
+    height: 32px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    background: var(--gray-light);
+  }
+
+  /* CORRECTION */
+  .correction-badge {
+    display: inline-block;
+    background: var(--teal);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    border-radius: 20px;
+    padding: 2px 8px;
+    margin-bottom: 4px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  .corr-num {
+    color: #e53935;
+    font-weight: 900;
+  }
+  .missing-box.filled {
+    background: #fff8f8;
+    border-color: #ef9a9a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: #c62828;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; }
+    .sidebar, .preview-toolbar, header { display: none !important; }
+    .preview-area { padding: 0; }
+    #sheet { box-shadow: none; border-radius: 0; padding: 12px; }
+    .btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Séquences <span>Numériques</span></div>
+    <div class="subtitle">Générateur d'activité — Attention soutenue</div>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+
+    <h2>⚙️ Paramètres globaux</h2>
+
+    <div class="ctrl-group">
+      <label>Nombre de colonnes (mise en page)</label>
+      <select id="nbCols">
+        <option value="1">1 colonne</option>
+        <option value="2" selected>2 colonnes</option>
+        <option value="3">3 colonnes</option>
+      </select>
+    </div>
+
+    <div class="ctrl-group">
+      <label>Titre de l'activité</label>
+      <input type="text" id="activityTitle" value="Numéros manquants" style="border:2px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:600;color:var(--ink);background:var(--gray-light);width:100%;">
+    </div>
+
+    <div class="ctrl-group">
+      <label>Consigne</label>
+      <textarea id="consigne" rows="2" style="border:2px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:600;color:var(--ink);background:var(--gray-light);width:100%;resize:vertical;">Écrivez dans le tableau les numéros manquants pour compléter la séquence.</textarea>
+    </div>
+
+    <div class="ctrl-group">
+      <label>Afficher la correction</label>
+      <select id="showCorr">
+        <option value="0">Non — feuille d'exercice</option>
+        <option value="1">Oui — feuille de correction</option>
+      </select>
+    </div>
+
+    <hr style="border:none;border-top:2px solid var(--blue-light);">
+
+    <h2>📋 Séquences</h2>
+
+    <div class="seq-list" id="seqList"></div>
+    <button class="btn-add-seq" onclick="addSequence()">＋ Ajouter une séquence</button>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="generate()">▶ Générer</button>
+      <button class="btn btn-secondary" onclick="randomizeAll()">🎲 Mélanger tout</button>
+      <button class="btn btn-outline" onclick="window.print()">🖨️ Imprimer / PDF</button>
+    </div>
+
+  </aside>
+
+  <!-- ── PREVIEW ── -->
+  <main class="preview-area">
+    <div class="preview-toolbar">
+      <h3>Aperçu de la feuille</h3>
+      <small style="color:var(--gray);font-weight:600;">Mise à jour automatique</small>
+    </div>
+    <div id="sheet"></div>
+  </main>
+
+</div>
+
+<script>
+// ── État des séquences ──
+let sequences = [
+  { min: 1, max: 25, cols: 5, missing: 5 },
+  { min: 1, max: 25, cols: 5, missing: 5 },
+];
+
+function renderSidebar() {
+  const list = document.getElementById('seqList');
+  list.innerHTML = '';
+  sequences.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'seq-item';
+    div.innerHTML = `
+      <div class="seq-item-header">
+        <span class="seq-item-title">Séquence ${i + 1}</span>
+        <button class="seq-remove" onclick="removeSequence(${i})" title="Supprimer">✕</button>
+      </div>
+      <div class="row-2">
+        <div class="ctrl-group">
+          <label>Min</label>
+          <input type="number" min="0" max="9999" value="${s.min}" onchange="updateSeq(${i},'min',this.value)">
+        </div>
+        <div class="ctrl-group">
+          <label>Max</label>
+          <input type="number" min="1" max="9999" value="${s.max}" onchange="updateSeq(${i},'max',this.value)">
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="ctrl-group">
+          <label>Colonnes</label>
+          <input type="number" min="2" max="10" value="${s.cols}" onchange="updateSeq(${i},'cols',this.value)">
+        </div>
+        <div class="ctrl-group">
+          <label>Manquants</label>
+          <input type="number" min="1" max="20" value="${s.missing}" onchange="updateSeq(${i},'missing',this.value)">
+        </div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function updateSeq(i, key, val) {
+  sequences[i][key] = parseInt(val) || sequences[i][key];
+  generate();
+}
+
+function addSequence() {
+  sequences.push({ min: 1, max: 25, cols: 5, missing: 5 });
+  renderSidebar();
+  generate();
+}
+
+function removeSequence(i) {
+  if (sequences.length <= 1) return;
+  sequences.splice(i, 1);
+  renderSidebar();
+  generate();
+}
+
+// ── Mélange Fisher-Yates ──
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── Génération d'un exercice ──
+function buildExercise(seq, num, showCorr) {
+  const { min, max, cols, missing } = seq;
+  const total = max - min + 1;
+  const nums = Array.from({ length: total }, (_, i) => i + min);
+  const shuffled = shuffle(nums);
+
+  // Choisir les indices qui seront "manquants"
+  const missingCount = Math.min(missing, total);
+  const missingIndices = new Set(
+    shuffle([...Array(total).keys()]).slice(0, missingCount)
+  );
+  const missingNums = [...missingIndices].map(i => shuffled[i]).sort((a, b) => a - b);
+
+  // Grille : afficher ou masquer
+  const rows = Math.ceil(total / cols);
+  let cellsHTML = '';
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const idx = r * cols + c;
+      if (idx >= total) {
+        cellsHTML += `<div class="num-cell" style="border-right:none;background:#fafbfc;"></div>`;
+      } else {
+        const isMissing = missingIndices.has(idx);
+        if (isMissing && !showCorr) {
+          cellsHTML += `<div class="num-cell" style="color:transparent;user-select:none;">__</div>`;
+        } else if (isMissing && showCorr) {
+          cellsHTML += `<div class="num-cell corr-num">${shuffled[idx]}</div>`;
+        } else {
+          cellsHTML += `<div class="num-cell">${shuffled[idx]}</div>`;
+        }
+      }
+    }
+  }
+
+  // Cases de réponse
+  let boxesHTML = '';
+  if (showCorr) {
+    missingNums.forEach(n => {
+      boxesHTML += `<div class="missing-box filled">${n}</div>`;
+    });
+  } else {
+    missingNums.forEach(() => {
+      boxesHTML += `<div class="missing-box"></div>`;
+    });
+  }
+
+  const corrBadge = showCorr ? `<span class="correction-badge">CORRECTION</span>` : '';
+
+  return `
+    <div class="exercise">
+      <div class="exercise-num">${num}. ${corrBadge}</div>
+      <div class="seq-table-wrap">
+        <div class="seq-label">Séquence de ${min} à ${max}</div>
+        <div class="num-grid" style="grid-template-columns:repeat(${cols},1fr);">
+          ${cellsHTML}
+        </div>
+      </div>
+      <div class="missing-section">
+        <div class="missing-label">Numéros manquants :</div>
+        <div class="missing-boxes">${boxesHTML}</div>
+      </div>
+    </div>
+  `;
+}
+
+function generate() {
+  const cols = parseInt(document.getElementById('nbCols').value);
+  const title = document.getElementById('activityTitle').value;
+  const consigne = document.getElementById('consigne').value;
+  const showCorr = parseInt(document.getElementById('showCorr').value);
+
+  let exHTML = '';
+  sequences.forEach((s, i) => {
+    exHTML += buildExercise(s, i + 1, showCorr);
+  });
+
+  document.getElementById('sheet').innerHTML = `
+    <div class="sheet-meta">
+      <div class="field">Prénom : <span class="field-line"></span></div>
+      <div class="field">Date : <span class="field-line" style="width:90px;"></span></div>
+    </div>
+    <div class="sheet-header">
+      <strong style="color:var(--blue);">RÈGLES :</strong> <span>${consigne}</span>
+    </div>
+    <div class="exercises-grid cols-${cols}">${exHTML}</div>
+  `;
+
+  renderSidebar();
+
+  // Ajustement dynamique du border-bottom des cellules de grille
+  document.querySelectorAll('.num-grid').forEach(grid => {
+    const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+    const cells = grid.querySelectorAll('.num-cell');
+    const total = cells.length;
+    cells.forEach((cell, idx) => {
+      if (idx >= total - cols) cell.style.borderBottom = 'none';
+      if ((idx + 1) % cols === 0) cell.style.borderRight = 'none';
+    });
+  });
+}
+
+function randomizeAll() {
+  generate(); // régénère avec de nouveaux shuffles
+}
+
+// Génération au changement des contrôles globaux
+['nbCols','showCorr'].forEach(id => {
+  document.getElementById(id).addEventListener('change', generate);
+});
+document.getElementById('activityTitle').addEventListener('input', generate);
+document.getElementById('consigne').addEventListener('input', generate);
+
+// Init
+renderSidebar();
+generate();
+</script>
+</body>
+</html>
